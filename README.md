@@ -9,6 +9,7 @@ The steps below are a compilation of a series of tutorials.
   <li><a href="#tutorial3">Tutorial 3: Prepare Database</a></li>
   <li><a href="#tutorial4">Tutorial 4: Authenticating Users</a></li>
   <li><a href="#tutorial5">Tutorial 5: Email Templates</a></li>
+  <li><a href="#tutorial6">Testing</a></li>
 </ul>
 
 <a name="tutorial1"></a> 
@@ -444,7 +445,7 @@ Create a file blade on resources /views/email/<b>verify.blade.php</b> as content
 
 ```
 
-/views/email/welcome.blade.php 
+/views/email/<b>welcome.blade.php</b>
 ```html
 <!DOCTYPE html> 
 <html lang="en-US"> 
@@ -464,3 +465,61 @@ Create a file blade on resources /views/email/<b>verify.blade.php</b> as content
 </body> 
 </html>
 ```
+/views/email/<b>reset.blade.php</b>
+
+```html
+<!DOCTYPE html> 
+<html lang="en-US"> 
+<head> 
+    <meta charset="utf-8"> 
+</head> 
+<body> 
+<h2>Reset Your Password</h2>> 
+ 
+<div> 
+ 
+Please follow the link below to 
+<a href="{{ URL::to('api/reset/' . $confirmation_code) }}">reset your password</a>. 
+ 
+</div> 
+ 
+</body> 
+</html>
+```
+
+<a name="tutorial6"></a> 
+<h1>Testing</h1>
+
+Postman Chrome App is a great tool for sending post/get requests with an UI.
+
+Register 
+http://localhost:8888/laravel-jwt-login-api/public/api/register [POST] 
+{"success":true,"message":"Thanks for signing up! Please check your email."} 
+ 
+http://localhost:8888/laravel-jwt-login-api/public/api/verify/[v_code] [GET] 
+{ 
+success: true, 
+message: "You have successfully verified your account." 
+} 
+ 
+ 
+Log In 
+http://localhost:8888/laravel-jwt-login-api/public/api/login [POST] 
+{ 
+token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjYsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4ODg4XC9sYXJhdmVsLWp3dC1sb2dpbi1hcGlcL3B1YmxpY1wvYXBpXC9sb2dpbiIsImlhdCI6MTQ3MDQxNDk5NiwiZXhwIjoxNDcwNDE4NTk2LCJuYmYiOjE0NzA0MTQ5OTYsImp0aSI6ImMyYmU0YjM0MzIzZWQxYjgxOTgzMGU1N2NiNTE2NjkyIn0.6I9wobL-21o2ESRWvZUuuQPl6EKR52FfBC9BbFVnho0" 
+} 
+ 
+ 
+Access Other Routes 
+http://localhost:8888/laravel-jwt-login-api/public/api/test [GET] 
+{ 
+error: "token_not_provided" 
+} 
+ 
+http://localhost:8888/laravel-jwt-login-api/public/api/test?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjYsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4ODg4XC9sYXJhdmVsLWp3dC1sb2dpbi1hcGlcL3B1YmxpY1wvYXBpXC9sb2dpbiIsImlhdCI6MTQ3MDQxNTMwNSwiZXhwIjoxNDcwNDE4OTA1LCJuYmYiOjE0NzA0MTUzMDUsImp0aSI6IjZmNmYyYTMxOTAwNTdiMzk5NmEyYTYzOGMyOGM1ZTZhIn0.bwrVFEY1uPlNdm-AG5FHW1RbnFnl2npocxpCODBgu7k 
+{ 
+foo: "bar" 
+} 
+ 
+
+
