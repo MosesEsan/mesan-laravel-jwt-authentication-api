@@ -492,34 +492,45 @@ Please follow the link below to
 
 Postman Chrome App is a great tool for sending post/get requests with an UI.
 
-Register 
+<h2>Register</h2>
 http://localhost:8888/laravel-jwt-login-api/public/api/register [POST] 
 {"success":true,"message":"Thanks for signing up! Please check your email."} 
  
 http://localhost:8888/laravel-jwt-login-api/public/api/verify/[v_code] [GET] 
+
+```json
 { 
 success: true, 
 message: "You have successfully verified your account." 
 } 
+```
  
  
-Log In 
+<h2>Log In </h2>
 http://localhost:8888/laravel-jwt-login-api/public/api/login [POST] 
+
+```json
 { 
 token:"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjYsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4ODg4XC9sYXJhdmVsLWp3dC1sb2dpbi1hcGlcL3B1YmxpY1wvYXBpXC9sb2dpbiIsImlhdCI6MTQ3MDQxNDk5NiwiZXhwIjoxNDcwNDE4NTk2LCJuYmYiOjE0NzA0MTQ5OTYsImp0aSI6ImMyYmU0YjM0MzIzZWQxYjgxOTgzMGU1N2NiNTE2NjkyIn0.6I9wobL-21o2ESRWvZUuuQPl6EKR52FfBC9BbFVnho0" 
 } 
+```
  
  
-Access Other Routes 
+<h2>Access Other Routes </h2>
 http://localhost:8888/laravel-jwt-login-api/public/api/test [GET] 
+
+```json
 { 
 error: "token_not_provided" 
 } 
- 
+```
+
 http://localhost:8888/laravel-jwt-login-api/public/api/test?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjYsImlzcyI6Imh0dHA6XC9cL2xvY2FsaG9zdDo4ODg4XC9sYXJhdmVsLWp3dC1sb2dpbi1hcGlcL3B1YmxpY1wvYXBpXC9sb2dpbiIsImlhdCI6MTQ3MDQxNTMwNSwiZXhwIjoxNDcwNDE4OTA1LCJuYmYiOjE0NzA0MTUzMDUsImp0aSI6IjZmNmYyYTMxOTAwNTdiMzk5NmEyYTYzOGMyOGM1ZTZhIn0.bwrVFEY1uPlNdm-AG5FHW1RbnFnl2npocxpCODBgu7k 
+
+```json
 { 
 foo: "bar" 
 } 
- 
+ ```
 
 
