@@ -351,7 +351,7 @@ class AuthController extends Controller
     } 
  
     /** 
-     * API Resend Verification 
+     * API Recover Password 
      * 
      * @param Request $request 
      * @return \Illuminate\Http\JsonResponse 
