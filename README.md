@@ -1,5 +1,5 @@
 # laravel-jwt-authentication
-Laravel 5.2 Authentication API using JWT with E-mail verification.
+A PHP project using the Laravel framework and JWT (JSON Web Tokens) to create an authentication API with E-mail verification for mobile apps.
 
 The steps below are a compilation of a series of tutorials.
 
