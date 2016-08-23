@@ -72,7 +72,8 @@ class AuthController extends Controller
             'phone_number' => $phone_number,
             'password' => Hash::make( $input['password']),
             'confirmation_code' => $confirmation_code,
-            'verification_code' => $verification_code
+            'verification_code' => $verification_code,
+            'type' => "email",
         ]);
 
         if($input['v_type'] === "sms"){
@@ -87,6 +88,99 @@ class AuthController extends Controller
                         ->subject('Verify your email address');
                 });
             return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email.']);
+        }
+    }
+
+    /**
+     * API Register User with FACEBOOK
+     *
+     * @param Request $request
+     */
+    public function registerWithFacebook(Request $request) {
+        $input = $request->only(
+            'name',
+            'email',
+            'fbID'
+        );
+
+        if(empty($input['email'])){
+            return response()->json(['success'=> false, 'error'=> "No email address provided"]);
+        }else{
+            $user =
+                User::where('email', '=', $input['email'])
+                    ->where('type', "fb")
+                    ->where('fbID', $input['fbID'])
+                    ->first();
+
+            //Refactor the code below
+            if ($user){
+                //Log user in
+                $email = $user->email;
+                $password = $email;
+
+                $credentials = [
+                    'email' => $email,
+                    'password' => $password
+                ];
+
+                try {
+                    // attempt to verify the credentials and create a token for the user
+                    if (! $token = JWTAuth::attempt($credentials)) {
+                        return response()->json(['success' => false, 'error' => 'Invalid Credentials. Please make sure you entered the right information and you have verified your account. '], 401);
+                    }
+                } catch (JWTException $e) {
+                    // something went wrong whilst attempting to encode the token
+                    return response()->json(['success' => false, 'error' => 'could_not_create_token'], 500);
+                }
+
+                // all good so return the token
+                return response()->json(compact('token'));
+
+            }else{
+                echo "no user";
+                //Register user
+                $rules = [
+                    'name' => 'required|max:255',
+                    'email' => 'required|email|max:255|unique:users'
+                ];
+
+                $validator = Validator::make($input, $rules);
+                //print_r($validator) ;
+
+                if($validator->fails()) {
+                    $error = $validator->messages()->toJson();
+                    return response()->json(['success'=> false, 'error'=> $error]);
+                }
+
+                $email = $input['email'];
+                $password = $email;
+                User::create([
+                    'name' => $input['name'],
+                    'email' => $input['email'],
+                    'password' => Hash::make($password),
+                    'confirmed' => 1,
+                    'type' => "fb",
+                    'fbID' => $input['fbID']
+                ]);
+
+                $credentials = [
+                    'email' => $email,
+                    'password' => $password
+                ];
+
+                try {
+                    // attempt to verify the credentials and create a token for the user
+                    if (! $token = JWTAuth::attempt($credentials)) {
+                        return response()->json(['success' => false, 'error' => 'Invalid Credentials. Please make sure you entered the right information and you have verified your account. '], 401);
+                    }
+                } catch (JWTException $e) {
+                    // something went wrong whilst attempting to encode the token
+                    return response()->json(['success' => false, 'error' => 'could_not_create_token'], 500);
+                }
+
+                // all good so return the token
+                return response()->json(compact('token'));
+            }
         }
     }
 
@@ -183,12 +277,40 @@ class AuthController extends Controller
      */
     public function login(Request $request)
     {
-//        $credentials = $request->only('email', 'password');
-
         $credentials = [
             'email' => $request->email,
             'password' => $request->password,
             'confirmed' => 1
+        ];
+
+        try {
+            // attempt to verify the credentials and create a token for the user
+            if (! $token = JWTAuth::attempt($credentials)) {
+                return response()->json(['success' => false, 'error' => 'Invalid Credentials. Please make sure you entered the right information and you have verified your account. '], 401);
+            }
+        } catch (JWTException $e) {
+            // something went wrong whilst attempting to encode the token
+            return response()->json(['success' => false, 'error' => 'could_not_create_token'], 500);
+        }
+
+        // all good so return the token
+        return response()->json(compact('token'));
+    }
+
+    /**
+     * API Login with Facebook
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function loginWithFacebook($email, $password)
+    {
+        echo $email;
+        echo $password;
+
+        $credentials = [
+            'email' => $email,
+            'password' => $password
         ];
 
         try {

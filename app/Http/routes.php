@@ -21,6 +21,7 @@ Route::group(['prefix' => 'api'], function() {
     //anything goes here will be under api/
     Route::post('login', 'Api\AuthController@login');
     Route::post('register', 'Api\AuthController@register');
+    Route::post('registerwithfb', 'Api\AuthController@registerWithFacebook');
     Route::get('verify/{type}/{confirmationCode}', 'Api\AuthController@verifyUser');
     Route::post('resend', 'Api\AuthController@resendVerification');
     Route::post('recover', 'Api\AuthController@recoverPassword');

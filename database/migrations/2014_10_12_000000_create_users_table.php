@@ -16,13 +16,16 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->number('phone_number')->unique();
+            $table->string('phone_number')->unique();
             $table->string('password');
             $table->boolean('confirmed')->default(0);
             $table->string('confirmation_code')->nullable();
             $table->string('verification_code')->nullable();
+            $table->string('type')->nullable();
+            $table->string('fbID')->nullable();
             $table->rememberToken();
             $table->timestamps();
+
         });
     }
 
