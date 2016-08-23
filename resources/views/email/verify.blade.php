@@ -17,7 +17,7 @@
 <div>
     Thanks for creating an account with Test API.
     Please follow the link below to verify your email address
-    <a href="{{ URL::to('api/verify/' . $confirmation_code) }}">Verify your account</a>.
+    <a href="{{ URL::to('api/verify/email/' . $confirmation_code) }}">Verify your account</a>.
 
 </div>
 

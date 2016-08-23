@@ -21,9 +21,11 @@ Route::group(['prefix' => 'api'], function() {
     //anything goes here will be under api/
     Route::post('login', 'Api\AuthController@login');
     Route::post('register', 'Api\AuthController@register');
-    Route::get('verify/{confirmationCode}', 'Api\AuthController@confirm');
+    Route::get('verify/{type}/{confirmationCode}', 'Api\AuthController@verifyUser');
     Route::post('resend', 'Api\AuthController@resendVerification');
     Route::post('recover', 'Api\AuthController@recoverPassword');
+
+//    Route::get('send', 'Api\AuthController@sendSMSVerification');
 
 
     Route::group(['middleware' => ['jwt.auth']], function() {

@@ -28,14 +28,18 @@ class AuthController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
+            'phone_number' => 'required|phone_number|min:9|unique:users',
             'password' => 'required|confirmed|min:6',
+            'v_type' => 'required',
         ];
 
         $input = $request->only(
             'name',
             'email',
+            'phone_number',
             'password',
-            'password_confirmation'
+            'password_confirmation',
+            'v_type'
         );
 
         $validator = Validator::make($input, $rules);
@@ -47,56 +51,80 @@ class AuthController extends Controller
             return response()->json(['success'=> false, 'error'=> $error]);
         }
 
-        $confirmation_code = str_random(30); //Generate confirmation code
+        $verification_code = "";
+        $confirmation_code = "";
+
+        if($input['v_type'] === "sms"){
+            //SMS Verification
+            $verification_code = rand(100000, 999999);
+        }elseif($input['v_type'] === "email"){
+            //Email verification
+            $confirmation_code = str_random(30); //Generate confirmation code
+        }
+
 
         $name = $input['name'];
         $email = $input['email'];
+        $phone_number = $input['phone_number'];
         User::create([
-            'name' => $input['name'],
-            'email' => $input['email'],
+            'name' => $name,
+            'email' => $email,
+            'phone_number' => $phone_number,
             'password' => Hash::make( $input['password']),
-            'confirmation_code' => $confirmation_code
+            'confirmation_code' => $confirmation_code,
+            'verification_code' => $verification_code
         ]);
 
-        Mail::send('email.verify', ['confirmation_code' => $confirmation_code],
-            function($m) use ($email, $name){
-                $m->from('[from_email_addd]', 'Test API');
-                $m->to($email, $name)
-                    ->subject('Verify your email address');
-            });
-
-        return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email.']);
+        if($input['v_type'] === "sms"){
+            //SMS Verification
+            $this->sendSMSVerification($verification_code,$phone_number);
+        }elseif($input['v_type'] === "email"){
+            //Email verification
+            Mail::send('email.verify', ['confirmation_code' => $confirmation_code],
+                function($m) use ($email, $name){
+                    $m->from($_ENV['MAIL_USERNAME'], 'Test API');
+                    $m->to($email, $name)
+                        ->subject('Verify your email address');
+                });
+            return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email.']);
+        }
     }
 
     /**
-     * API Confirm User
+     * API Verify User
      *
      * @param Request $request
      */
-    public function confirm($confirmation_code)
+    public function verifyUser($type, $code)
     {
-        if(!$confirmation_code) return "Invalid link";
+        if(!$code) return "Invalid link/code";
 
-        $user = User::where('confirmation_code', $confirmation_code)->first();
+        if ($type === "email"){
+            $user = User::where('confirmation_code', $code)->first();
+        }else{
+            $user = User::where('verification_code', $code)->first();
+        }
 
         if (!$user) return response()->json(['success'=> false, 'error'=> "User Not Found"]);
 
         $user->confirmed = 1;
-        $user->confirmation_code = null;
+        if ($type === "email") $user->confirmation_code = null;
+        else $user = $user->verification_code = null;
+
         $user->save();
 
-        $email =$user->email;
-        $name =$user->name;
-
-        Mail::send('email.welcome', ['email' => $email, 'name' => $name],
-            function ($m) use ($email, $name) {
-                $m->from('[from_email_add]', 'Test API');
-                $m->to($email, $name)->subject('Welcome To Test API');
-            });
+        if ($type === "email"){
+            $email =$user->email;
+            $name =$user->name;
+            Mail::send('email.welcome', ['email' => $email, 'name' => $name],
+                function ($m) use ($email, $name) {
+                    $m->from($_ENV['MAIL_USERNAME'], 'Test API');
+                    $m->to($email, $name)->subject('Welcome To Test API');
+                });
+        }
 
         return response()->json(['success'=> true, 'message'=> 'You have successfully verified your account.']);
     }
-
 
     /**
      * API Resend Verification
@@ -192,4 +220,40 @@ class AuthController extends Controller
         JWTAuth::invalidate($request->input('token'));
     }
 
+    public function sendSMSVerification($verification_code, $phone_number){
+//    public function sendSMSVerification(){
+
+//        $verification_code = rand(100000, 999999);
+//        $phone_number = '16318364980';
+
+        $otp_prefix = ':';
+
+        //Your message to send, Add URL encoding here.
+        $message = "Hello! Welcome to TestApp. Your Verification code is $otp_prefix $verification_code";
+
+        $url = 'https://rest.nexmo.com/sms/json?'.http_build_query(
+                [
+                    'api_key' =>  $_ENV['NEXMO_API_KEY'],
+                    'api_secret' => $_ENV['NEXMO_API_SECRET'],
+                    'to' => $phone_number,
+                    'from' => $_ENV['NEXMO_FROM_NUMBER'],
+                    'text' => $message
+                ]
+            );
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $response = curl_exec($ch);
+
+        //Decode the json object you retrieved when you ran the request.
+        $decoded_response = json_decode($response, true);
+
+        foreach ( $decoded_response['messages'] as $message ) {
+            if ($message['status'] == 0) {
+                return response()->json(['success'=> true, 'message'=> "Verification code sent to ".$phone_number+'.']);
+            } else {
+                return response()->json(['success'=> false, 'error'=> "Error {$message['status']} {$message['error-text']}"]);
+            }
+        }
+    }
 }
