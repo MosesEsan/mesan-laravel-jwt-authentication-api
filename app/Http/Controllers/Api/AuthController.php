@@ -51,18 +51,6 @@ class AuthController extends Controller
             return response()->json(['success'=> false, 'error'=> $error]);
         }
 
-        $verification_code = "";
-        $confirmation_code = "";
-
-        if($input['v_type'] === "sms"){
-            //SMS Verification
-            $verification_code = rand(100000, 999999);
-        }elseif($input['v_type'] === "email"){
-            //Email verification
-            $confirmation_code = str_random(30); //Generate confirmation code
-        }
-
-
         $name = $input['name'];
         $email = $input['email'];
         $phone_number = $input['phone_number'];
@@ -71,24 +59,10 @@ class AuthController extends Controller
             'email' => $email,
             'phone_number' => $phone_number,
             'password' => Hash::make( $input['password']),
-            'confirmation_code' => $confirmation_code,
-            'verification_code' => $verification_code,
             'type' => "email",
         ]);
 
-        if($input['v_type'] === "sms"){
-            //SMS Verification
-            $this->sendSMSVerification($verification_code,$phone_number);
-        }elseif($input['v_type'] === "email"){
-            //Email verification
-            Mail::send('email.verify', ['confirmation_code' => $confirmation_code],
-                function($m) use ($email, $name){
-                    $m->from($_ENV['MAIL_USERNAME'], 'Test API');
-                    $m->to($email, $name)
-                        ->subject('Verify your email address');
-                });
-            return response()->json(['success'=> true, 'message'=> 'Thanks for signing up! Please check your email.']);
-        }
+        return response()->json(['success'=> true, 'message'=> 'Thanks for signing up!']);
     }
 
     /**
@@ -137,7 +111,6 @@ class AuthController extends Controller
                 return response()->json(compact('token'));
 
             }else{
-                echo "no user";
                 //Register user
                 $rules = [
                     'name' => 'required|max:255',
@@ -185,6 +158,68 @@ class AuthController extends Controller
     }
 
     /**
+     * API Send Verification
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function sendVerification(Request $request)
+    {
+        $rules = [
+            'email' => 'required',
+            'v_type' => 'required',
+        ];
+
+        $input = $request->only(
+            'email',
+            'v_type'
+        );
+
+        $validator = Validator::make($input, $rules);
+
+        if($validator->fails()) {
+            $error = $validator->messages()->toJson();
+            return response()->json(['success'=> false, 'error'=> $error]);
+        }
+        $user = User::where('email', $request->email)->first();
+
+        if (!$user) return response()->json(['success'=> false, 'error'=> "User was not found."]);
+
+        $verification_code = rand(10000, 99999);
+        $confirmation_code = str_random(30); //Generate confirmation code
+        $type = $request->v_type;
+
+        if ($type === "sms") $user->verification_code = $verification_code;
+        else $user->confirmation_code = $confirmation_code;
+        $user->save();
+
+        if($type === "sms"){
+            //SMS Verification
+            $decoded_response = $this->sendSMSVerification($verification_code,$request->phone_number);
+
+            foreach ( $decoded_response['messages'] as $message ) {
+                if ($message['status'] == 0) {
+                    return response()->json(['success'=> true, 'message'=> "Verification code has been sent to ".$request->phone_number+'.']);
+                } else {
+                    return response()->json(['success'=> false, 'error'=> "Error {$message['status']} {$message['error-text']}"]);
+                }
+            }
+
+        }elseif($request->v_type === "email"){
+            //Email verification
+            $email =$user->email;
+            $name =$user->name;
+            Mail::send('email.verify', ['confirmation_code' => $confirmation_code],
+                function($m) use ($email, $name){
+                    $m->from($_ENV['MAIL_USERNAME'], 'Test API');
+                    $m->to($email, $name)
+                        ->subject('Verify your email address');
+                });
+            return response()->json(['success'=> true, 'message'=> 'Please check your email.']);
+        }
+    }
+
+    /**
      * API Verify User
      *
      * @param Request $request
@@ -193,17 +228,20 @@ class AuthController extends Controller
     {
         if(!$code) return "Invalid link/code";
 
-        if ($type === "email"){
-            $user = User::where('confirmation_code', $code)->first();
-        }else{
-            $user = User::where('verification_code', $code)->first();
-        }
+        if ($type === "email") $user = User::where('confirmation_code', $code)->first();
+        else $user = User::where('verification_code', $code)->first();
 
-        if (!$user) return response()->json(['success'=> false, 'error'=> "User Not Found"]);
+        if (!$user) {
+            if ($type === "email"){
+                return response()->json(['success'=> false, 'error'=> "User Not Found."]);
+            }else{
+                return response()->json(['success'=> false, 'error'=> "Incorrect Code. Please make sure you entered the correct code."]);
+            }
+        }
 
         $user->confirmed = 1;
         if ($type === "email") $user->confirmation_code = null;
-        else $user = $user->verification_code = null;
+        else $user->verification_code = null;
 
         $user->save();
 
@@ -305,9 +343,6 @@ class AuthController extends Controller
      */
     public function loginWithFacebook($email, $password)
     {
-        echo $email;
-        echo $password;
-
         $credentials = [
             'email' => $email,
             'password' => $password
@@ -343,11 +378,6 @@ class AuthController extends Controller
     }
 
     public function sendSMSVerification($verification_code, $phone_number){
-//    public function sendSMSVerification(){
-
-//        $verification_code = rand(100000, 999999);
-//        $phone_number = '16318364980';
-
         $otp_prefix = ':';
 
         //Your message to send, Add URL encoding here.
@@ -369,13 +399,6 @@ class AuthController extends Controller
 
         //Decode the json object you retrieved when you ran the request.
         $decoded_response = json_decode($response, true);
-
-        foreach ( $decoded_response['messages'] as $message ) {
-            if ($message['status'] == 0) {
-                return response()->json(['success'=> true, 'message'=> "Verification code sent to ".$phone_number+'.']);
-            } else {
-                return response()->json(['success'=> false, 'error'=> "Error {$message['status']} {$message['error-text']}"]);
-            }
-        }
+        return $decoded_response;
     }
 }

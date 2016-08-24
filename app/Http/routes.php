@@ -23,6 +23,7 @@ Route::group(['prefix' => 'api'], function() {
     Route::post('register', 'Api\AuthController@register');
     Route::post('registerwithfb', 'Api\AuthController@registerWithFacebook');
     Route::get('verify/{type}/{confirmationCode}', 'Api\AuthController@verifyUser');
+    Route::post('verification', 'Api\AuthController@sendVerification');
     Route::post('resend', 'Api\AuthController@resendVerification');
     Route::post('recover', 'Api\AuthController@recoverPassword');
 
@@ -34,12 +35,6 @@ Route::group(['prefix' => 'api'], function() {
 
         Route::get('test', function(){
             return response()->json(['foo'=>'bar']);
-        });
-
-        Route::get('subscribe-list', function(){
-            return response()->json(['1'=>'Technology','2'=>'Music',
-                '3'=>'Education','4'=>'Startup','5'=>'Events',
-                '6'=>'Photography','7'=>'Drama','8'=>'Entertainment', ]);
         });
     });
 });
