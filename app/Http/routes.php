@@ -27,9 +27,6 @@ Route::group(['prefix' => 'api'], function() {
     Route::post('resend', 'Api\AuthController@resendVerification');
     Route::post('recover', 'Api\AuthController@recoverPassword');
 
-//    Route::get('send', 'Api\AuthController@sendSMSVerification');
-
-
     Route::group(['middleware' => ['jwt.auth']], function() {
         Route::post('logout', 'Api\AuthController@logout');
 

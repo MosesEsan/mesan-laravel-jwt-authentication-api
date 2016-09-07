@@ -25,7 +25,6 @@ class CreateUsersTable extends Migration
             $table->string('fbID')->nullable();
             $table->rememberToken();
             $table->timestamps();
-
         });
     }
 

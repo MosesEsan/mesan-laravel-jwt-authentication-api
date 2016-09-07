@@ -288,7 +288,7 @@ class AuthController extends Controller
     }
 
     /**
-     * API Resend Verification
+     * API Recover Password
      *
      * @param Request $request
      * @return \Illuminate\Http\JsonResponse
@@ -376,6 +376,13 @@ class AuthController extends Controller
 
         JWTAuth::invalidate($request->input('token'));
     }
+
+
+    /**
+     * Send SMS Verification Code
+     *
+     * @param $verification_code, $phone_number
+     */
 
     public function sendSMSVerification($verification_code, $phone_number){
         $otp_prefix = ':';
