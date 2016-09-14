@@ -29,8 +29,7 @@ class AuthController extends Controller
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
             'phone_number' => 'required|phone_number|min:9|unique:users',
-            'password' => 'required|confirmed|min:6',
-            'v_type' => 'required',
+            'password' => 'required|confirmed|min:6'
         ];
 
         $input = $request->only(
@@ -38,8 +37,7 @@ class AuthController extends Controller
             'email',
             'phone_number',
             'password',
-            'password_confirmation',
-            'v_type'
+            'password_confirmation'
         );
 
         $validator = Validator::make($input, $rules);
