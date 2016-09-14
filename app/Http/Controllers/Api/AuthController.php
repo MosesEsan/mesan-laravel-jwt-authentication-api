@@ -28,14 +28,12 @@ class AuthController extends Controller
         $rules = [
             'name' => 'required|max:255',
             'email' => 'required|email|max:255|unique:users',
-            'phone_number' => 'required|phone_number|min:9|unique:users',
             'password' => 'required|confirmed|min:6'
         ];
 
         $input = $request->only(
             'name',
             'email',
-            'phone_number',
             'password',
             'password_confirmation'
         );
@@ -51,11 +49,9 @@ class AuthController extends Controller
 
         $name = $input['name'];
         $email = $input['email'];
-        $phone_number = $input['phone_number'];
         User::create([
             'name' => $name,
             'email' => $email,
-            'phone_number' => $phone_number,
             'password' => Hash::make( $input['password']),
             'type' => "email",
         ]);
