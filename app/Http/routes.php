@@ -16,6 +16,9 @@ Route::get('/', function () {
 });
 
 
+Route::get('password/reset/{token?}', 'Auth\PasswordController@showResetForm');
+$this->post('password/reset', 'Auth\PasswordController@reset');
+
 Route::group(['prefix' => 'api'], function() {
 
     //anything goes here will be under api/
