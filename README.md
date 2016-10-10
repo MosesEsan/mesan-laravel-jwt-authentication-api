@@ -1,5 +1,7 @@
 # Laravel JWT Authentication with E-Mail and SMS Verification
-A PHP project using the Laravel framework and JWT (JSON Web Tokens) to create an authentication API with E-mail and SMS verification for mobile apps.
+A PHP Mobile Authentication API which includes E-mail and SMS verification, developed with Laravel 5.2 framework and JWT (JSON Web Tokens) Package. 
+
+My <a href="https://github.com/MosesEsan/mesan-react-native-authentication-views">React Native Authentication Views</a> app is currently using this API, <a href="https://appetize.io/app/0hn1p6wu6ewx8z6rdrmrtm9ubc?device=iphone5s&scale=75&orientation=portrait&osVersion=9.3">click here</a> for a demo.
 
 The steps below are a compilation of a series of tutorials.
 
@@ -88,30 +90,19 @@ Route::group(['prefix' => 'api'], function() {
 
 <a name="tutorial3"></a> 
 <h1>
-<a href="http://esandigital.com/blog/2016/08/16/tutorial-3-json-web-token-jwt-authentication-using-laravel-5-2/">
 Tutorial 3: Database Setup
-</a>
 </h1>
 Since we are going to allow users to create their accounts within the application, we will need a table to store all of our users. Thankfully, Laravel already ships with a migration to create a basic users table, so we do not need to manually generate one. The default migration for the users table is located in the database/migrations directory.
 
 We need to create just two fields in addition to the fields that are standard in most users tables (username, email, password, etc.).
 
-<a href="http://esandigital.com/blog/2016/08/16/tutorial-3-json-web-token-jwt-authentication-using-laravel-5-2/">
-Continue reading...
-</a>
- 
 
 <a name="tutorial4"></a> 
 <h1>
-<a href="http://esandigital.com/blog/2016/08/16/tutorial-4-json-web-token-jwt-authentication-using-laravel-5-2/">
 Tutorial 4: Authenticating Users
-</a>
 </h1>
 
 This is an important part of the API, you will be authenticating users so that they can access the information they have access to. To use authentication, you need to register it in your <b>http/Kernel.php</b>
  
 By default, Laravel has CSRF token verification turned on, but since we’re using JWTs in a stateless manner now, we don’t really need CSRF tokens. We can turn this default behavior off by commenting out the <b>VerifyCsrfToken</b> middleware in Kernel.php. 
 
-<a href="http://esandigital.com/blog/2016/08/16/tutorial-4-json-web-token-jwt-authentication-using-laravel-5-2/">
-Continue reading...
-</a>
