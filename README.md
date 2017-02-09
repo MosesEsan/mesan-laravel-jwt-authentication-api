@@ -1,8 +1,6 @@
 # Laravel JWT Authentication with E-Mail and SMS Verification
 A PHP Mobile Authentication API which includes E-mail and SMS verification, developed with Laravel 5.2 framework and JWT (JSON Web Tokens) Package. 
 
-My <a href="https://github.com/MosesEsan/mesan-react-native-authentication-views">React Native Authentication Views</a> app is currently using this API, <a href="https://appetize.io/app/0hn1p6wu6ewx8z6rdrmrtm9ubc?device=iphone5s&scale=75&orientation=portrait&osVersion=9.3">click here</a> for a demo.
-
 The steps below are a compilation of a series of tutorials.
 
 <ul>  
