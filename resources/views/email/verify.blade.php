@@ -1,25 +1,23 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: mosesesan
- * Date: 8/3/16
- * Time: 3:23 PM
- */
-?>
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en-US">
 <head>
     <meta charset="utf-8">
 </head>
 <body>
-<h2>Verify Your Email Address</h2>
 
 <div>
-    Thanks for creating an account with Test API.
-    Please follow the link below to verify your email address
-    <a href="{{ URL::to('api/verify/email/' . $confirmation_code) }}">Verify your account</a>.
+    Hi {{ $name }},
+    <br>
+    Thank you for creating an account with us. Don't forget to complete your registration!
+    <br>
+    Please click on the link below or copy it into the address bar of your browser to confirm your email address:
+    <br>
 
+    <a href="{{ url('user/verify', $verification_code)}}">Confirm my email address </a>
+
+    <br/>
 </div>
 
 </body>
 </html>
+
