@@ -115,5 +115,3 @@ Create new table “user_verifications” that will store token of user verifica
 When a user follows this link, we take the passed in verification code and search for it within the user_verifications table. If a matching verified code is found we set the is_verified field for this user to true.
 
 The full tutorial is available on my  <a href="https://medium.com/@mosesesan/tutorial-5-how-to-build-a-laravel-5-4-jwt-authentication-api-with-e-mail-verification-64a5411cb4d6" target="_blank">blog</a>.
-
-Available on my <a href="http://mosesesan.com/blog/2017/06/19/laravel-jwt-authentication-with-e-mail-verification/#step4" target="_blank">blog</a>.
