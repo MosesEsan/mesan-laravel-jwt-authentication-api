@@ -12,7 +12,8 @@ The steps below are a compilation of a series of tutorials.
   <li><a href="#step4">Step 4:  Set Up Database</a></li>
   <li><a href="#step5">Step 5: Register and Verify Email Address</a></li>
   <li><a href="#step6">Step 6: Log User In and Out</a></li>
-  <li><a href="#step7">Step 7: Testing</a></li>
+  <li><a href="#step6">Step 7: Recover Password</a></li>
+  <li><a href="#step7">Step 8: Testing</a></li>
 </ul>
 
 <a name="step1"></a>
@@ -113,21 +114,6 @@ Create new table “user_verifications” that will store token of user verifica
 
 When a user follows this link, we take the passed in verification code and search for it within the user_verifications table. If a matching verified code is found we set the is_verified field for this user to true.
 
+The full tutorial is available on my  <a href="https://medium.com/@mosesesan/tutorial-5-how-to-build-a-laravel-5-4-jwt-authentication-api-with-e-mail-verification-64a5411cb4d6" target="_blank">blog</a>.
+
 Available on my <a href="http://mosesesan.com/blog/2017/06/19/laravel-jwt-authentication-with-e-mail-verification/#step4" target="_blank">blog</a>.
-
-
-
-<a name="step5"></a>
-### Step 5: Register and Verify Email Address
-
-Available on my <a href="http://mosesesan.com/blog/2017/06/19/laravel-jwt-authentication-with-e-mail-verification/#step5" target="_blank">blog</a>.
-
-<a name="step6"></a>
-### Step 6: Log User In and Out
-
-Available on my <a href="http://mosesesan.com/blog/2017/06/19/laravel-jwt-authentication-with-e-mail-verification/#step6" target="_blank">blog</a>.
-
-<a name="step7"></a>
-### Step 7: Testing
-
-Available on my  <a href="http://mosesesan.com/blog/2017/06/19/laravel-jwt-authentication-with-e-mail-verification/#step7" target="_blank">blog</a>.
