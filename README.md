@@ -1,5 +1,5 @@
 # Laravel 5.4 JWT Authentication with E-Mail Verification
-A PHP Mobile Authentication API which includes E-mail verification, developed with Laravel 5.4 framework and JWT (JSON Web Tokens) Package.
+A PHP Mobile Authentication API with E-mail verification, developed with Laravel 5.4 framework and JWT (JSON Web Tokens) Package.
 
 ### Tutorial
 

@@ -47,12 +47,7 @@ class AuthController extends Controller
         $name = $request->name;
         $email = $request->email;
         $password = $request->password;
-        $user = User::create([
-            'name' => $name,
-            'email' => $email,
-            'password' => Hash::make($password),
-//            'type' => "email",
-        ]);
+        $user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
 
         $verification_code = str_random(30); //Generate verification code
         DB::table('user_verifications')->insert(['user_id'=>$user->id,'token'=>$verification_code]);
