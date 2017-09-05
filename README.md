@@ -1,6 +1,12 @@
 # Laravel 5.4 JWT Authentication with E-Mail Verification
 A PHP Mobile Authentication API with E-mail verification, developed with Laravel 5.4 framework and JWT (JSON Web Tokens) Package.
 
+**This Branch** <br/>
+Email Verification
+
+**Other Branch** <br/>
+<a href="https://github.com/MosesEsan/mesan-laravel-jwt-authentication-api/tree/sms-verification" target="_blank">Phone Verification with Twilio Authy</a>
+
 ### Tutorial
 
 The steps below are a compilation of a series of tutorials.
@@ -9,7 +15,7 @@ The steps below are a compilation of a series of tutorials.
   <li><a href="#step1">Step 1: Create new project and install jwt-auth</a></li>
   <li><a href="#step2">Step 2: Add JWT Provider and Facades</a></li>
   <li><a href="#step3">Step 3: Set Up Routes</a></li>
-  <li><a href="#step4">Step 4:  Set Up Database</a></li>
+  <li><a href="#step4">Step 4: Set Up Database</a></li>
   <li><a href="#step5">Step 5: Register and Verify Email Address</a></li>
   <li><a href="#step6">Step 6: Log User In and Out</a></li>
   <li><a href="#step6">Step 7: Recover Password</a></li>
