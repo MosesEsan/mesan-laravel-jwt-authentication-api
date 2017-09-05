@@ -1,4 +1,4 @@
-# Laravel 5.4 JWT Authentication with Verification
+# Laravel 5.4 JWT Authentication with Phone Verification with Twilio Authy
 A PHP Mobile Authentication API with Phone Verification with Twilio Authy, developed with Laravel 5.4 framework and JWT (JSON Web Tokens) Package.
 
 **This Branch** <br/>
