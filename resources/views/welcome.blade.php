@@ -68,7 +68,7 @@
         <div class="flex-center position-ref full-height">
             <div class="content">
                 <div class="title m-b-md">
-                    JWT Authentication API with Phone Verification using Twilio Authy
+                    JWT Authentication API with E-mail and Phone Verification using Twilio Authy
                 </div>
 
 
