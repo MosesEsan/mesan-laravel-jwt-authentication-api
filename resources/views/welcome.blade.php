@@ -74,11 +74,11 @@
 
                 <div class="links" style="margin-bottom: 20px; text-align: left;">
                     <ul>
-                        <li>Register <strong>(/register)</strong></li>
-                        <li>Send Verification Code <strong>(/phone/send-verification)</strong></li>
-                        <li>Login <strong>(/login)</strong></li>
-                        <li>Recover Password <strong>(/recover)</strong></li>
-                        <li>Verify Code <strong>(/phone/verify-code)</strong></li>
+                        <li>Register <strong>(/api/register)</strong></li>
+                        <li>Send Verification Code <strong>(/api/phone/send-verification)</strong></li>
+                        <li>Login <strong>(/api/login)</strong></li>
+                        <li>Recover Password <strong>(/api/recover)</strong></li>
+                        <li>Verify Code <strong>(/api/phone/verify-code)</strong></li>
                     </ul>
                 </div>
 
