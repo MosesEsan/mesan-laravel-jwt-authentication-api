@@ -93,6 +93,7 @@ Open up routes/api.php.
 ```php
 Route::post('login', 'AuthController@login'); 
 Route::post('register', 'AuthController@register'); 
+Route::post('recover', 'AuthController@recover');
  
 Route::group(['middleware' => ['jwt.auth']], function() { 
     Route::post('logout', 'AuthController@logout'); 
