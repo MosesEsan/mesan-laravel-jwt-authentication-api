@@ -5,8 +5,8 @@ A PHP Mobile Authentication API with Phone Verification using Twilio Authy, deve
 E-mail Verification and Phone Verification using Twilio Authy
 
 **Other Branches** <br/>
-<a href="https://github.com/MosesEsan/mesan-laravel-jwt-authentication-api/tree/laravel5.4" target="_blank">Email Verification Only </a><br>
-<a href="https://github.com/MosesEsan/mesan-laravel-jwt-authentication-api/tree/sms-verification" target="_blank">Phone Verification only</a>
+<a href="https://github.com/MosesEsan/mesan-laravel-jwt-authentication-api/tree/email-verification" target="_blank">Email Verification Only </a><br>
+<a href="https://github.com/MosesEsan/mesan-laravel-jwt-authentication-api/tree/phone-verification" target="_blank">Phone Verification only</a>
 
 ### Tutorial
 
