@@ -39,10 +39,8 @@ class AuthController extends Controller
 
         $validator = Validator::make($input, $rules);
 
-        if ($validator->fails()) {
-            $error = $validator->messages()->toJson();
-            return response()->json(['success' => false, 'error' => $error]);
-        }
+        if ($validator->fails())
+            return response()->json(['success' => false, 'error' => $validator->messages()]);
 
         $name = $request->name;
         $email = $request->email;
@@ -56,7 +54,7 @@ class AuthController extends Controller
             'data' => [
                 'token' => $token,
                 'verified' => false, //add flag to indicate account has not be verified
-                'message' => 'Thanks for signing up! Verify your accountto complete your registration.',
+                'message' => 'Thanks for signing up! Verify your account to complete your registration.',
             ]
         ]);
     }
@@ -77,10 +75,8 @@ class AuthController extends Controller
         $input = $request->all();
 
         $validator = Validator::make($input, $rules);
-        if ($validator->fails()) {
-            $error = $validator->messages()->toJson();
-            return response()->json(['success' => false, 'error' => $error]);
-        }
+        if ($validator->fails())
+            return response()->json(['success' => false, 'error' => $validator->messages()]);
 
         $phone_number = $request->phone_number;
 
@@ -129,7 +125,6 @@ class AuthController extends Controller
     public function verifyCode(Request $request)
     {
         $rules = [
-//            'request_id' => 'required',
             'country_code' => 'required',
             'phone_number' => 'required',
             'verification_code' => 'required'
@@ -138,15 +133,12 @@ class AuthController extends Controller
         $input = $request->all();
 
         $validator = Validator::make($input, $rules);
-        if ($validator->fails()) {
-            $error = $validator->messages()->toJson();
-            return response()->json(['success' => false, 'error' => $error]);
-        }
+        if ($validator->fails())
+            return response()->json(['success' => false, 'error' => $validator->messages()]);
 
         $phone_number = $request->phone_number;
         $country_code = $request->country_code;
         $verification_code = $request->verification_code;
-
 
         //CURL REQUEST STARTS HERE
         $url = "https://api.authy.com/protected/json/phones/verification/check?phone_number=$phone_number&country_code=$country_code&verification_code=$verification_code";
@@ -206,10 +198,8 @@ class AuthController extends Controller
 
         $validator = Validator::make($input, $rules);
 
-        if ($validator->fails()) {
-            $error = $validator->messages()->toJson();
-            return response()->json(['success' => false, 'error' => $error]);
-        }
+        if ($validator->fails())
+            return response()->json(['success' => false, 'error' => $validator->messages()]);
 
         $credentials = [
             'email' => $request->email,
@@ -291,5 +281,17 @@ class AuthController extends Controller
                 'message' => 'A reset email has been sent! Please check your email.'
             ]
         ]);
+    }
+
+
+
+    /**
+     * Create Error Message
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getErrorMessage(){
+
     }
 }
