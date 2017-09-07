@@ -1,4 +1,4 @@
-# Laravel 5.4 JWT Authentication with E-Mail Verification
+# Laravel 5.4 JWT Authentication API with E-Mail Verification
 A PHP Mobile Authentication API with E-mail verification, developed with Laravel 5.4 framework and JWT (JSON Web Tokens) Package.
 
 **This Branch** <br/>
@@ -8,7 +8,7 @@ Email Verification
 <a href="https://github.com/MosesEsan/mesan-laravel-jwt-authentication-api/tree/phone-verification" target="_blank">Phone Verification using Twilio Authy</a>
 
 ## Testing
-Use Chrome plugin Postman to test.<br/>
+Use Chrome plugin <a href="https://chrome.google.com/webstore/detail/postman/fhbjgbiflinjbdggehcddcbncdddomop?hl=en" target="_blank">Postman</a> to test.<br/>
 
 **Try accessing test route without token [GET]**<br/>
 
