@@ -18,6 +18,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('register', 'AuthController@register');
+Route::post('registerwithfb', 'AuthController@registerWithFacebook');
 Route::post('phone/send-verification', 'AuthController@sendVerificationCode');
 Route::post('login', 'AuthController@login');
 Route::post('recover', 'AuthController@recover');

@@ -45,7 +45,7 @@ class AuthController extends Controller
         $name = $request->name;
         $email = $request->email;
         $password = $request->password;
-        User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
+        User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'reg_type' => "email"]);
 
         $token = JWTAuth::attempt(['email' => $request->email, 'password' => $request->password]);
 
@@ -57,6 +57,65 @@ class AuthController extends Controller
                 'message' => 'Thanks for signing up! Verify your account to complete your registration.',
             ]
         ]);
+    }
+    /**
+     * API Register With Facebook
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function registerWithFacebook(Request $request)
+    {
+        $input = $request->only(
+            'name',
+            'email'
+        );
+
+//        firstname, lastname, fbToken, fbID
+
+        //Check if the user exist in the database using the email address
+        $user = User::where('email', '=', $input['email'])->first();
+
+        //if the user exist, check if they registered with email or fb
+        if ($user){
+            $type = $user->type;
+
+            //if the email address was not initially registered through facebook login, return error
+            if ($type !== "facebook")
+                return response()->json(['success' => false, 'error' => "The email address you entered is already in use by another account."]);
+            else{
+                //log the user in, generate a token
+                $token = JWTAuth::fromUser($user);
+
+                $verified = ($user->is_verified == 1) ? true : false;
+
+                // all good so return the token
+                return response()->json([
+                    'success' => true,
+                    'data' => [
+                        'token' => $token,
+                        'verified' => $verified, //add flag to indicate if account has been verified
+                    ]
+                ]);
+            }
+        }else{
+            //if the user does not exist, create an account with a randomnly generated password
+            $name = $request->name;
+            $email = $request->email;
+            $password = $this->generatePassword(10,1,"lower_case,upper_case,numbers,special_symbols");
+            User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password), 'reg_type' => "facebook"]);
+
+            $token = JWTAuth::attempt(['email' => $request->email, 'password' => $password]);
+
+            return response()->json([
+                'success' => true,
+                'data' => [
+                    'token' => $token,
+                    'verified' => false, //add flag to indicate account has not be verified
+                    'message' => 'Thanks for signing up! Verify your account to complete your registration.',
+                ]
+            ]);
+        }
     }
 
     /**
@@ -213,7 +272,7 @@ class AuthController extends Controller
             }
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
-            return response()->json(['success' => false, 'error' => 'could_not_create_token'], 500);
+            return response()->json(['success' => false, 'error' => 'Unable to create token'], 500);
         }
 
         $user = Auth::user();
@@ -283,15 +342,39 @@ class AuthController extends Controller
         ]);
     }
 
+    function generatePassword($length,$count, $characters) {
 
+// $length - the length of the generated password
+// $count - number of passwords to be generated
+// $characters - types of characters to be used in the password
 
-    /**
-     * Create Error Message
-     *
-     * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getErrorMessage(){
+// define variables used within the function
+        $symbols = array();
+        $passwords = array();
+        $used_symbols = '';
+        $pass = '';
 
+// an array of different character types
+        $symbols["lower_case"] = 'abcdefghijklmnopqrstuvwxyz';
+        $symbols["upper_case"] = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $symbols["numbers"] = '1234567890';
+        $symbols["special_symbols"] = '!?~@#-_+<>[]{}';
+
+        $characters = split(",",$characters); // get characters types to be used for the passsword
+        foreach ($characters as $key=>$value) {
+            $used_symbols .= $symbols[$value]; // build a string with all characters
+        }
+        $symbols_length = strlen($used_symbols) - 1; //strlen starts from 0 so to get number of characters deduct 1
+
+        for ($p = 0; $p < $count; $p++) {
+            $pass = '';
+            for ($i = 0; $i < $length; $i++) {
+                $n = rand(0, $symbols_length); // get a random character from the string with all characters
+                $pass .= $used_symbols[$n]; // add the character to the password string
+            }
+            $passwords[] = $pass;
+        }
+
+        return $passwords; // return the generated password
     }
 }
